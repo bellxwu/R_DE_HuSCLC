@@ -2,3 +2,9 @@
 *.xlsx
 *.Rproj
 *.Rproj.user
+.Rproj.user
+*.gct
+*.gct.gz
+*.rda
+*.RData
+*.txt
