@@ -1,5 +1,6 @@
 ## Description: Combining Muscka hits with "infiltration-inducing" DEGs. 
 # Goal is to see if combining these hits together and feeding into GSEA will lead to any changes in pathways.
+# Used the 162 genes from both NE-low and NE-high, specifically Wald stat from NE-high.
 ## Author: Bell Wu
 ## Date created: 2025.09.05
 
@@ -20,14 +21,33 @@ head(muscka)
 z_equiv = function(p, lfc) { 
   sign(lfc) * qnorm(1 - p/2)
 }
-# calculating df from mageck
-Z_muscka = muscka |> 
+# create two lists: positive enriched, and negative enriched
+# for negative:
+z_neg = muscka |> 
   dplyr::transmute(Gene = id,
-                   Z_equiv = z_equiv(neg.p.value, lfc = neg.lfc))
+                   p.value = neg.p.value,
+                   padj = neg.fdr,
+                   lfc = neg.lfc) |> 
+  filter(padj < 0.2)
+# for positive: 
+z_pos = muscka |> 
+  dplyr::transmute(Gene = id,
+                   p.value = pos.p.value,
+                   padj = pos.fdr,
+                   lfc = pos.lfc) |> 
+  filter(padj < 0.2)
+# combine lists:
+Z_muscka = rbind(z_neg, z_pos) |> 
+  filter(!grepl("Ctrl", Gene)) # remove ctrls
+
+# calculating df from mageck
+Z_muscka = Z_muscka |> 
+  dplyr::transmute(Gene = Gene,
+                   Z_equiv = z_equiv(p.value, lfc = lfc))
 head(Z_muscka)
 # testing z-equiv approximation to Wald with DEseq
 head(DEG_hi)
-Z_DEG_lo = DEG_hi |> 
+Z_DEG_hi = DEG_hi |> 
   dplyr::transmute(Gene = X,
                    Wald = stat,
                    pval = pvalue, 
@@ -37,7 +57,7 @@ head(DEG_hi)
 # Not going to floor pvalue, the z_equiv where pval not small similar to Wald
 
 # 3.0 Combining z_equiv to DEG_lo list ---
-Z_all = Z_DEG_lo |> 
+Z_all = Z_DEG_hi |> 
   dplyr::select(c("Gene", "Wald"))
 colnames(Z_all)[2] = "Z_equiv"
 dim(Z_all)
@@ -106,7 +126,7 @@ Del = ggplot(Del_NES, mapping = aes(x = Delta_NES, fct_reorder(DEG_Description, 
   xlab("Delta NES") +
   ggtitle("Change in NES after inclusion of MusCKA hits") +
   theme_few()
-ggsave("NE-high_Delta_NES.png",
+ggsave("DEGhi_MuscKA_Delta_NES.png",
        path = "~/R_programming/R_DE_HuSCLC/Analysis_PNGs/",
        plot = Del,
        dpi = 300,
@@ -125,7 +145,7 @@ DEG = ggplot(Del_NES, mapping = aes(x = DEG_NES, fct_reorder(DEG_Description, DE
   xlab("NES") +
   ggtitle("GSEA of NE-low Hot vs Cold DEGs") +
   theme_few()
-ggsave("NE-high_DEG_NES.png",
+ggsave("DEGhi_NES.png",
        path = "~/R_programming/R_DE_HuSCLC/Analysis_PNGs/",
        plot = DEG,
        dpi = 300,
@@ -144,7 +164,7 @@ Mus = ggplot(Del_NES, mapping = aes(x = MusCKA_NES, fct_reorder(DEG_Description,
   xlab("NES") +
   ggtitle("GSEA of NE-low Hot vs Cold DEGs plus MusCKA hits") +
   theme_few()
-ggsave("NE-high_DEGplusMusCKA_NES.png",
+ggsave("DEGhi_plus_MusCKA_NES.png",
        path = "~/R_programming/R_DE_HuSCLC/Analysis_PNGs/",
        plot = Mus,
        dpi = 300,
@@ -182,5 +202,3 @@ for (i in seq_along(core_g)) {
   )
 }
 results
-
-
