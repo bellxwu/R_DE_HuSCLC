@@ -1,11 +1,11 @@
-## Description: DE of subtypes (NE-low and NE-high)
-## Author: Bell Wu
-## Date created: 2025.08.30
+# Description: DE of subtypes (NE-low and NE-high). Includes CDX in this analysis.
+# Author: Bell Wu
+# Date created: 2025.08.30
 
 library(DESeq2)
 library(tidyverse)
 
-setwd("~/R_programming/R_DE_HuSCLC/")
+setwd("~/R_programming/R_DE_HuSCLC/Analysis_csvs/")
 
 # 1.0 Load files and prep dfs -------
 total_counts <- read.csv("CDX_CCLE_raw_counts.csv")
@@ -46,6 +46,7 @@ str(high_res)
 # identify comparisons
 resultsNames(high_dds)
 high_resLFC <- lfcShrink(high_dds, coef = "condition_Hot_vs_Cold")
+view(high_resLFC)
 
 # probing results
 resOrdered <- high_res[order(high_res$pvalue),]
@@ -106,6 +107,8 @@ same_csv_NE_high <- NE_high_sig |>
 write.csv(same_csv_NE_high, "NE_high_sg.csv")
 write.csv(same_csv_NE_low, "NE_low_sg.csv")
 
-
-
+# 5.0 probing through same genes ----
+view(same_csv_NE_high)
+view(NE_high_sig)
+view(NE_low_sig)
 
