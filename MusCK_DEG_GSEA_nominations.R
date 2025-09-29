@@ -9,7 +9,7 @@
 
 library(tidyverse)
 
-# 1.0 load dfs and clean data -----
+# 1.0 load dfs and clean data ------------------------------------------------------
 setwd("~/R_programming/R_MuSCK_Library/MusCKA-run3/Ver2_analyses/comparative_analysis/")
 muscka = read.csv("B6_IgGvsNRG_IgG_0.2.csv") # FDR < 0.2 muscka
 
@@ -18,7 +18,7 @@ DEG_hi = read.csv("NE_high_sg.csv") # same gene DEGs from NE-high
 DEG_lo = read.csv("NE_low_sg.csv") # same gene DEGs from NE-low
 DEG_total = rbind(DEG_hi, DEG_lo) # combine for total, note that there will be duplicates
 
-# 2.0 creating z-equivalent as Wald surrogate -----
+# 2.0 creating z-equivalent as Wald surrogate ------------------------------------------------------
 head(muscka)
 # function for calculating z-equiv
 z_equiv = function(p, lfc) { 
@@ -59,7 +59,7 @@ view(DEG_hi)
 head(DEG_hi)
 # Not going to floor pvalue, the z_equiv where pval not small similar to Wald
 
-# 3.0 Combining z_equiv to DEG_lo list ---
+# 3.0 Combining z_equiv to DEG_lo list ----------------------------------------------------
 Z_all = Z_DEG_hi |> 
   dplyr::select(c("Gene", "Wald"))
 colnames(Z_all)[2] = "Z_equiv"
@@ -68,7 +68,7 @@ head(Z_all)
 Z_all = rbind(Z_all, Z_muscka)
 dim(Z_all)
 
-# 4.0 Pathway analyses ----
+# 4.0 Pathway analyses ----------------------------------------------------------
 library(clusterProfiler)
 library(org.Hs.eg.db)
 
@@ -113,7 +113,7 @@ Del_NES = Del_NES |>
   dplyr::arrange(desc(Delta_NES))
 head(Del_NES)
 
-# 5.0 Visualizing pathways ----
+# 5.0 Visualizing pathways -----------------------------------------------------
 library(ggplot2)
 library(ggthemes)
 
@@ -174,7 +174,7 @@ ggsave("DEGhi_plus_MusCKA_NES.png",
        height = 5,
        width = 10)
 
-# 6.0 Identifying leading genes ----
+# 6.0 Identifying leading genes -----------------------------------------------------
 library(enrichplot)
 library(ggrepel)
 # gseaplot2 of top pathways
@@ -199,9 +199,9 @@ for (i in seq_along(core_g)) {
   count = length(matches)
   results[[i]] = list(
     description = GO_IDs[ ,2][i],
-    # string = core_g[i],
     matches = matches,
     count = count
   )
 }
-results # print list of results
+results # print list of results for leading genes
+
