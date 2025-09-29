@@ -7,7 +7,7 @@ library(tidyverse)
 
 setwd("~/R_programming/R_DE_HuSCLC/Analysis_csvs/")
 
-# 1.0 Load files and prep dfs -------
+# 1.0 Load files and prep dfs -------------------------------------------------
 total_counts <- read.csv("CDX_CCLE_raw_counts.csv")
 head(total_counts)
 
@@ -23,7 +23,7 @@ head(NE_high)
 rownames(NE_high) = total_counts$X
 
 # 2.0 DEseq for NE-high:
-# 2.1 create metadata for dfs -----
+# 2.1 create metadata for dfs ------------------------------------------------------
 colnames(total_counts)
 batches <- data.frame(
   Sample = colnames(total_counts),
@@ -36,7 +36,7 @@ NE_high_md <- batches |>
     str_detect(Sample, "CDX9|SHP77|H1694"), "Hot", "Cold"
   ))
 
-# 2.2 Create DDS for DESeq2 -----
+# 2.2 Create DDS for DESeq2 ------------------------------------------------------
 high_dds <- DESeqDataSetFromMatrix(countData = NE_high,
                                   colData = NE_high_md,
                                   design = ~ batch + condition)
@@ -61,7 +61,7 @@ plotMA(high_resLFC)
 plotMA(high_res)
 
 # 3.0 DEseq for NE-low:
-# 3.1 create metadata for dfs -----
+# 3.1 create metadata for dfs ------------------------------------------------------
 NE_low_md <- batches |> 
   filter(batches$Sample %in% colnames(NE_low)) |> 
   mutate(condition = ifelse(
@@ -86,7 +86,7 @@ low_resSig <- subset(resOrdered, padj < 0.05)
 write.csv(as.data.frame(low_resSig), 
           file="NE_low_HotvsCold.csv")
 
-# 4.0 Comparisons for same genes ----
+# 4.0 Comparisons for same genes -----------------------------------------------------
 NE_low_sig <- read.csv("NE_low_HotvsCold.csv")
 NE_high_sig <- read.csv("NE_high_HotvsCold.csv")
 head(NE_low_sig)
@@ -107,7 +107,7 @@ same_csv_NE_high <- NE_high_sig |>
 write.csv(same_csv_NE_high, "NE_high_sg.csv")
 write.csv(same_csv_NE_low, "NE_low_sg.csv")
 
-# 5.0 probing through same genes ----
+# 5.0 probing through same genes -----------------------------------------------------
 view(same_csv_NE_high)
 view(NE_high_sig)
 view(NE_low_sig)
