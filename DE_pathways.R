@@ -13,7 +13,7 @@ library(ReactomePA)
 library(ggplot2)
 library(enrichplot)
 
-# 1.0 setwd and load dfs -----
+# 1.0 setwd and load dfs -------------------------------------------------------
 setwd("~/R_programming/R_DE_HuSCLC/Analysis_csvs/")
 
 # df for DEs in NE-high/ow
@@ -23,7 +23,7 @@ dim(NE_high_DE)
 dim(NE_low_DE)
 head(NE_high_DE)
 
-# 2.0 GSEA of NE-high -----
+# 2.0 GSEA of NE-high ------------------------------------------------------------
 # NE-high gene list contains 674 genes
 # 2.1 test enrichment with gseGO
 # order genelist
@@ -56,7 +56,7 @@ view(high_res_react_3)
 # show up from reactomedb did not match any specific pathway curated by reactomeDB
 # See companion .md file for in-depth notes.
 
-# 3.0 GSEA of NE-low: -----
+# 3.0 GSEA of NE-low: ------------------------------------------------------------
 # note that NE-low has more genes. NE-low contains 3455 genes.
 # 3.0.1 visualize test statistics: ----
 low_test_stats = data.frame(Gene = NE_low_DE$X,
@@ -71,7 +71,7 @@ high = ggplot(high_test_stats, mapping = aes(x = NE_high)) +
   geom_density()
 low+high
 
-# 3.1 test enrichment with gseGO ------
+# 3.1 test enrichment with gseGO -------------------------------------------------------------
 # order genelist
 low_genelist <- NE_low_DE$stat |> 
   setNames(NE_low_DE$X) |> 
@@ -99,7 +99,7 @@ low_res_react_3 <- gsePathway(
 )
 view(low_res_react)
 
-# 4.0 Exporting results: write .csv for each -----
+# 4.0 Exporting results: write .csv for each ------------------------------------------------------------
 # NE-high:
 str(high_res_GO_2)
 str(high_res_react_2)
@@ -173,7 +173,7 @@ low_res_react <- gsePathway(
 view(low_res_react)
 # few pathways shown, also pathways shown more general
 
-# 6.0 Visualizing GSEA pathways: ----
+# 6.0 Visualizing GSEA pathways: -----------------------------------------------------------
 # bar plot of enrichment scores
 # from results of GO in 2.0
 plot_2 <- ggplot(high_res_GO_2, showCategory=10, aes(NES, fct_reorder(Description, NES), fill = qvalue)) +
