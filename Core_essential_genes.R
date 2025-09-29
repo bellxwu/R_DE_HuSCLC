@@ -3,14 +3,14 @@
 # Date created: 2025.09.12
 # Author: Bell Wu
 
-# 1.0 setwd and load dfs ----
+# 1.0 setwd and load dfs ----------------------------------------------------
 setwd("~/R_programming/R_MuSCK_Library/CRISPR-Screen BL1 data/Essential genes/")
 ess_genes_T1 = read.table("T0_v_T25_Essential_Genes.gene_summary.txt", header = TRUE)
 ess_genes_T2 = read.table("T0_v_T35_Essential_Genes.gene_summary.txt", header = TRUE)
 core_genes = read.table("core-essential-genes-sym_HGNCID.txt", header = TRUE)
 
-# 2.0 identify essential genes: ------
-gene_list = c("TAF7", "DDX23", "HNRNPK", "TICRR", "IARS", "AURKB", "PE01", 
-              "SETD1B", "CCT3", "CDC25B", "BIRC5", "NRK", "MRG15", "POP1",
-              "MED23")
-gene_list[!gene_list %in% core_genes$AAMP]
+# 2.0 identify essential genes: ------------------------------------------------
+setwd("~/R_programming/R_DE_HuSCLC/Analysis_csvs/")
+muscka_hits = read.csv("B6_IgGvsNRG_IgG_0.2.csv")
+gene_list = muscka_hits$id
+gene_list[!gene_list %in% core_genes$AAMP] # filter out only non-essential genes

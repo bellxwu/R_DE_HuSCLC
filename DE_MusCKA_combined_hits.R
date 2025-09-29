@@ -13,7 +13,7 @@
 
 library(tidyverse)
 
-# 1.0 B6 IgG vs NRG IgG, or "t1" ----------
+# 1.0 B6 IgG vs NRG IgG, or "t1" --------------------------------------------------
 # loss of these genes result in sensitization in IC setting
 # load dfs
 setwd("~/R_programming/R_DE_HuSCLC/Analysis_csvs/")
@@ -67,7 +67,7 @@ intersect(NE_high_sig$X, t1_neg_rank100$id)
 length(intersect(NE_high_sig$X, t1_neg_rank100$id))
 length(intersect(NE_low_sig$X, t1_neg_rank100$id))
 
-# 2.0 B6-aCD8 vs B6-IgG or "t2": --------
+# 2.0 B6-aCD8 vs B6-IgG or "t2": ------------------------------------------------
 # loss of these genes implies a pro-tumour function of CD8
 # alternatively, pos enrichment leads to improved survival in CD8-present environment
 setwd("~/Desktop/Lok Lab/*HuMice Project - CRISPR screen/MusCKA-RUN3/")
@@ -87,7 +87,7 @@ pos_sg <- pos_sg[order(pos_sg$pos.rank) ,]
 neg_sg <- t2_neg_rank_100 |> 
   filter(id %in% sg)
 
-# 3.0 B6-aCD8 vs NRG-IgG or "t3" -----
+# 3.0 B6-aCD8 vs NRG-IgG or "t3" --------------------------------------------------
 # loss of these genes means cancer becomes sensitized to non-CD8 cells.
 setwd("~/R_programming/R_MuSCK_Library/MusCKA-run3/Ver2_analyses/comparative_analysis/")
 aCD8_NRG_IgG <- read.table("B6_aCD8_vs_NSG_IgG_gene_summary.txt", header = TRUE)
@@ -121,7 +121,7 @@ DE_genes <- NE_total |>
 DE_genes <- DE_genes[order(DE_genes$X), ]
 DE_genes <- DE_genes[order(DE_genes$log2FoldChange, decreasing = TRUE), ]
 
-# 4.0 Finding intersecting genes ------
+# 4.0 Finding intersecting genes --------------------------------------------------
 # take the difference between t1 and t3. 
 diff_t1 <- setdiff(t1_neg_rank100$id, t3_neg_rank100$id)
 mus_genes <- t1_neg_rank100 |> 
@@ -143,7 +143,7 @@ common_genes = DE_genes |>
 mus_genes = mus_genes |> 
   filter(id %in% common_genes$X)
 
-# 5.0 Create csvs for future references ----
+# 5.0 Create csvs for future references --------------------------------------------------
 setwd("~/R_programming/R_DE_HuSCLC/Analysis_csvs/")
 write.csv(diff_t1, "t1vt3_gene_list.csv") # csv with non-CD8 confounters removed
 write.csv(mus_DE, "mus_DEG_combined_hits.csv") # csv for intersecting genese of DEGlo or DEGhi
