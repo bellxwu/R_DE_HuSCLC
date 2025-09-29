@@ -8,3 +8,9 @@
 *.rda
 *.RData
 *.txt
+*.DS_Store
+*.png
+*.pdf
+*.tsv
+*.tar.gz
+*.gz
