@@ -20,7 +20,8 @@ selected_lines <- selected_lines[ , c(-1:-2)]
 head(selected_lines)
 
 # need to make a colData containing the metadata and information about the samples
-# 1.2 N vs A ----
+
+# 1.2 N vs A ----------------------------------------------------------------------
 cell_lines <- selected_lines %>%
   select(contains("H82"), contains("H446"), contains("SHP77"), contains("H1694")) # this will be my input count matrix
 head(cell_lines)
@@ -60,7 +61,7 @@ sum(DEG_DvE$padj < 0.1, na.rm=TRUE) # identify all genes that have a padj < 0.1
 write.csv(as.data.frame(DEG_DvE_ordered), 
           file = "SCLC_CCLE_Cold-D_vs_Cold-E.csv") # this final .csv contains all genes ordered from most to least significant
 
-# 1.3 I vs P
+# 1.3 I vs P ----------------------------------------------------------------------
 cell_lines <- selected_lines %>%
   dplyr::select(matches("H1048|H841|SBC5|H526")) # this will be my input count matrix
 head(cell_lines)

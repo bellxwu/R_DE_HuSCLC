@@ -39,7 +39,7 @@ colnames(CCLE)[1] = "Gene"
 
 # 2.0 select candidate hits from dataset ----------------------------------------------------------
 # 2.1 for candidate hits
-candidates = c("PEO1", "DDX23", "TAF7", "NRK", "PECAM1", "SLC6A11", "FBXO11", "KDM1A")
+candidates = c("GENES")
 # from George data set
 George_hits = George |> 
   filter(Gene %in% candidates)
@@ -50,11 +50,11 @@ CCLE_hits = CCLE |>
 dim(CCLE_hits)
 
 # alternate gene names
-peo1 = c("TWINKLE", "IOSCA", "MTDPS7", "PRLTS5", "ATXN8", "PEOA3", "SANDO", "SCA8", "PEO1", "TWINL", "PEO", "FLJ21832")
-pecam1 = c("PECA1", "CD31", "PECAM1", "PECAM", "ENDOCAM")
+hit1 = c("GENES")
+hi2 = c("GENES")
 
 CCLE_hits = CCLE |> 
-  filter(Gene %in% pecam1)
+  filter(Gene %in% hit1)
 
 # 2.2 for top 100 neg hits
 candidates_100 = muscka_100$id
@@ -129,8 +129,9 @@ ggsave("histogram_George_RNA_hits.png",
        height = 3,
        width = 4.5)
 
-# 5.0 Analysis of potential hits (DEG + muscka) ----
+# 5.0 Analysis of potential hits (DEG + muscka) ----------------------------------------------------------------
 # Purpose is to find intersecting genes from DEG-hi or DEG-lo that are similar to muscka hits
+
 setwd("/Users/bellwu/R_programming/R_DE_HuSCLC/Analysis_csvs")
 potential_hits = read.csv("mus_DEG_combined_hits.csv") # read csv for combined hits
 head(potential_hits)
@@ -139,11 +140,11 @@ candidates = potential_hits$id # take gene names
 # 5.1 Pull candidate genes from dataset ------------------------------------------------------------
 # from George dataset
 George_hits = George |> 
-  filter(Gene %in% candidates, !Gene %in% c("NRK", "TAP1", "SLC6A11"))
+  filter(Gene %in% candidates, !Gene %in% c("GENES"))
 dim(George_hits)
 # from CCLE
 CCLE_hits = CCLE |> 
-  filter(Gene %in% candidates, !Gene %in% c("NRK", "TAP1", "SLC6A11"))
+  filter(Gene %in% candidates, !Gene %in% c("GENES"))
 dim(CCLE_hits)
 
 # 5.2 plot density/histogram plots from dataset ------------------------------------------------------
@@ -206,11 +207,11 @@ candidates = muscka_0.2$id
 # 6.1 Pull data from datasets and remove duplicates: ------------------------------------------------------
 # from George dataset
 George_hits = George |> 
-  filter(Gene %in% candidates, !Gene %in% c("TAP1", "B2M", "HNRNPK", "DDX23", "TICRR", "PECAM1", "AURKB", "TAF7"))
+  filter(Gene %in% candidates, !Gene %in% c("GENES"))
 dim(George_hits)
 # from CCLE
 CCLE_hits = CCLE |> 
-  filter(Gene %in% candidates, !Gene %in% c("TAP1", "B2M", "HNRNPK", "DDX23", "TICRR", "PECAM1", "AURKB", "TAF7"))
+  filter(Gene %in% candidates, !Gene %in% c("GENES"))
 dim(CCLE_hits)
 
 # 6.2 Plot density from CCLE -------------------------------------------------------------
@@ -235,7 +236,7 @@ ggsave("density_CCLE_RNA_hits_mus0.2.png",
        height = 3,
        width = 4)
 
-# 6.2 plot from George_2015 dataset -------
+# 6.2 plot from George_2015 dataset -------------------------------------------------
 s_cols = colnames(George_hits)[-1] # take samples 
 d_candidate = George_hits |>  # create a df_long
   pivot_longer(cols = s_cols,
@@ -266,8 +267,10 @@ ggsave("histogram_George_RNA_hits_mus0.2.png",
        width = 4.5)
 
 # 7.0 Selection of candidate genes: Density and histograms: ------------------------------------------------------
-# 7.1 for candidate hits
-candidates = c("PEO1", "DDX23", "TAF7", "SETD1B", "JAK1", "MMP11")
+# Created new list of candidate genes based on prevalence.
+# Replot histograms and boxplots for future presntations.
+# 7.1 for candidate hits -------------------------------------------------------------------------------------
+candidates = c("GENES")
 # from George data set
 George_hits = George |> 
   filter(Gene %in% candidates)
