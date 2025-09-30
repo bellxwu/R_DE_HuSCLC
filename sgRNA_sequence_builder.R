@@ -1,23 +1,29 @@
-# Description: Automoated script to read FASTA sequences to nominate common exons between transcripts
+# Description: Automated script to nominate common exons between transcripts directly from ensembl API.
 # Goal is to identify the common sequences within exons. 
 # Date created: 2025.09.14
 # Author: Bell Wu
 
-# Criteria for selecting exons (ordered in priortiy):
+# Criteria for selecting exons (ordered in priority):
 # 1. Exons common to all transcripts
 # 2. Early exons
 # 3. Asymmetrical exons
 # 4. Not exon 1
+
+# Changelog:
+# 2025.09.29 - functions for retrieving exons (get_early_freq_exons) converted into GetSameExons
+# rewrite functions using GetSameExons
 
 library(httr2)
 library(jsonlite)
 library(tidyverse)
 library(rlang)
 
-# 1.0 request data from REST API ----------
+source("~/R_programming/R_analyses_scripts/GetSameExons.R") # new function for retrieving 
+
+# 1.0 request data from REST API ------------------------------------------------
 req = request("http://rest.ensembl.org")
 
-# 1.1 build GET wrapper for ensembl ----------
+# 1.1 build GET wrapper for ensembl ---------------------------------------------
 # path = path to URL
 get_ensembl = function(path, query = list()) {
   request("http://rest.ensembl.org") |> # set the main URL to request
@@ -28,20 +34,20 @@ get_ensembl = function(path, query = list()) {
     resp_body_json(simplifyVector = TRUE)
 }
 
-# 1.2 create function to GET exons ----------
+# 1.2 create function to GET exons ---------------------------------------------
 get_ensembl_exon = function(gene_id) {
   get_ensembl(paste0("overlap/id/", gene_id),
               query)
 }
 
-# 1.3 flag common exons of all transcripts ----------
+# 1.3 flag common exons of all transcripts --------------------------------------
 tx_exons  <- split(exon_df$id, exon_df$Parent) # split by transcripts
 common_id <- Reduce(intersect, tx_exons) # find the exon present in all IDs 
 
 # create a a table of counts for each exons in transcript
 t = table(unlist(tx_exons)) |> 
   data.frame() 
-# 1.3.1 for single exon -----
+# 1.3.1 for single exon --------------------------------------------------------
 # find the most frequent exon
 exon_t = t |> 
   filter(Freq == max(t$Freq))
@@ -56,7 +62,7 @@ get_ensembl_exon_info = function(exon_id) {
 # find the exon information
 get_ensembl_exon_info(exon_id)
 
-# 1.3.2 for multiple exons -----
+# 1.3.2 for multiple exons -----------------------------------------------------
 exon_t = t |> 
   filter(Freq > 20)
 # select the list of exon transcripts
@@ -80,7 +86,7 @@ exon_starts = lapply(exons, function(x) x[["start"]]) # function to select the s
 early_exon = unlist(exon_starts)
 early_exon = early_exon[order(early_exon)] # order by ascending order of exons
 
-# 2.0 putting it all together for a function -----
+# 2.0 putting it all together for a function ------------------------------------
 get_early_freq_exons = function(gene_id) {
   get_ensembl_exon = function(gene_id) {
     query = list("feature" = "exon")
@@ -143,32 +149,32 @@ get_early_freq_exons = function(gene_id) {
 }
 
 
-# 3.0 finding exons for DDX23
-path = "xrefs/symbol/homo_sapiens/DDX23"
-DDX23 = get_ensembl(path)
-gene_id = DDX23$id
+# 3.0 finding exons for GENE1 --------------------------------------------------
+path = "xrefs/symbol/homo_sapiens/GENE1"
+GENE1 = get_ensembl(path)
+gene_id = GENE1$id
 
-get_early_freq_exons(gene_id = gene_id)
+GENE1 = GetSameExons("GENE1")
 
-# 4.0 finding exons for NRK
-path = "xrefs/symbol/homo_sapiens/NRK"
-NRK = get_ensembl(path)
-gene_id = NRK$id
+# 4.0 finding exons for GENE2 ---------------------------------------------------
+path = "xrefs/symbol/homo_sapiens/GENE2"
+GENE2 = get_ensembl(path)
+gene_id = GENE2$id
 
-get_early_freq_exons(gene_id = gene_id)
+GENE2 = GetSameExons("GENE2")
+ 
+# 5.0 finding exons for GENE3 --------------------------------------------------
+path = "xrefs/symbol/homo_sapiens/GENE3"
+GENE3 = get_ensembl(path)
+gene_id = GENE3$id
 
-# 5.0 finding exons for SLC6A11
-path = "xrefs/symbol/homo_sapiens/SLC6A11"
-SLC6A11 = get_ensembl(path)
-gene_id = SLC6A11$id
+GENE3 = GetSameExons("GENE3")
 
-get_early_freq_exons(gene_id = gene_id)
-
-# 6.0 finding exons for PECAM1
+# 6.0 finding exons for GENE4 --------------------------------------------------
 path = "xrefs/symbol/homo_sapiens/PECAM1"
-SLC6A11 = get_ensembl(path)
-gene_id = SLC6A11$id
+GENE4 = get_ensembl(path)
+gene_id = GENE4$id
 
-get_early_freq_exons(gene_id = gene_id)
+GENE4 = GetSameExons("GENE4")
 
 

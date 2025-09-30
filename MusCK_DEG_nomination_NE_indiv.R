@@ -8,7 +8,7 @@
 # Changelog:
 # 2025.09.18 - Added selection of genes from NE-low also. 
 
-# 1.0 setwd and load dfs -----
+# 1.0 setwd and load dfs -------------------------------------------------------
 setwd("~/R_programming/R_DE_HuSCLC/Analysis_csvs/")
 DEGs_hi = read.csv("NE_high_HotvsCold.csv")
 dim(DEGs_hi)
@@ -36,7 +36,7 @@ GSEA_hi = gseGO(geneList = genelist,
                 pvalueCutoff = 0.2)
 view(GSEA_hi)
 
-# 3.0 create Z-equivalent for muscka ------
+# 3.0 create Z-equivalent for muscka -----------------------------------------
 # function for calculating z-equiv
 z_equiv = function(p, lfc) {
   sign(lfc) * qnorm(1 - p/2)
@@ -71,7 +71,7 @@ pathways = gseGO(geneList = hi_genelist,
 head(pathways@result)
 view(pathways)
 
-# 4.0 Comparison of previous pathways ------------
+# 4.0 Comparison of previous pathways -----------------------------------------------
 # previous pathways 
 setwd("~/R_programming/R_DE_HuSCLC/Analysis_csvs/")
 high_res_GO_2 = read.csv("GSEA_GO_NE-high.csv")
@@ -99,7 +99,7 @@ Del_NES = Del_NES |>
   dplyr::arrange(desc(Delta_NES))
 head(Del_NES)
 
-# 5.0 Visualizing pathways ------------------------
+# 5.0 Visualizing pathways ------------------------------------------------------
 library(ggplot2)
 library(ggthemes)
 

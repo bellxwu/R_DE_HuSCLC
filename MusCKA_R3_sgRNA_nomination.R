@@ -23,13 +23,13 @@ head(counts_norm)
 # 2.0 select out candidate sgRNAs ----------------------------------------------
 # raw counts
 raw_sgrna = counts |> 
-  filter(grepl("TAF7|HNRNPK|DDX23|TICRR|TAP1|NRK|SLC6A11|PECAM1", sgRNA)) |> 
-  filter(!grepl("TAF7L", sgRNA)) |> 
+  filter(grepl("GENES", sgRNA)) |> 
+  filter(!grepl("GENES", sgRNA)) |> 
   dplyr::arrange(sgRNA)
 # normalized
 cand_sgrnas = counts_norm |> 
-  filter(grepl("TAF7|HNRNPK|DDX23|TICRR|TAP1|NRK|SLC6A11|PECAM1", sgRNA)) |> 
-  filter(!grepl("TAF7L", sgRNA)) |> 
+  filter(grepl("GENES", sgRNA)) |> 
+  filter(!grepl("GENES", sgRNA)) |> 
   dplyr::arrange(sgRNA)
 # select fold change
 FC = cand_sgrnas |> 
@@ -57,10 +57,10 @@ setwd("~/Desktop/Lok Lab/*HuMice Project - CRISPR screen/S4_2025 MusCKA_R3 analy
 write.csv(select_seq, file = "Candidate_sgRNAs.csv")
 
 # 4.0 sgRNAs from new candidate genes (based on prevelance) --------------------
-new_genes = c("MMP11", "PEO1", "SETD1B") # OMG!
+new_genes = c("GENES") # OMG!
 # filter out genes
 cand_sgrnas = counts_norm |> 
-  filter(grepl("MMP11|PEO1|SETD1B", sgRNA)) |> 
+  filter(grepl("GENES", sgRNA)) |> 
   dplyr::arrange(sgRNA)
 # select fold change
 FC = cand_sgrnas |> 
@@ -73,7 +73,7 @@ smal_FC = FC |>
 top_n_grna = smal_FC |> 
   group_by(Gene) |> 
   dplyr::arrange(B6_NRG_IgG, .by_group = TRUE) |> 
-  filter(grepl("MMP11", sgRNA))
+  filter(grepl("GENES", sgRNA))
 # filter for FC > 1, for positively selected
 large_FC = FC |> 
   filter(B6_NRG_IgG > 1)

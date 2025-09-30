@@ -9,7 +9,7 @@ library(ggplot2)
 library(ggthemes)
 library(wesanderson)
 
-# 1.0 prepare dfs and workspace -----
+# 1.0 prepare dfs and workspace ------------------------------------------------
 setwd("~/R_programming/R_MuSCK_Library/MusCKA-run3/Ver1_analyses/")
 
 # load data files:
@@ -27,7 +27,7 @@ no_ctrl = counts |>
 dim(counts)
 dim(no_ctrl)
 
-# 2.0 create barplot for the average of sgRNAs mapped ----
+# 2.0 create barplot for the average of sgRNAs mapped --------------------------
 counts_avg <- counts_summary |> 
   group_by(Label) |> 
   summarise(avg_zerocounts = mean(Zerocounts)) |> 
@@ -52,7 +52,7 @@ ggsave(
   dpi = 300
 )
 
-# 2.1 create bar plot for percent mapped and average gini indices -----
+# 2.1 create bar plot for percent mapped and average gini indices --------------
 # 2.1.1 percent reads mapped:-----
 map_avg <- counts_summary |> 
   group_by(Label) |> 
@@ -77,7 +77,7 @@ ggsave(
   dpi = 300
 )
 
-# 2.1.2 Gini indicies: -----
+# 2.1.2 Gini indicies: -----------------------------------------------------------
 ggplot(map_avg, mapping = aes(x = reorder(Label, -average_Gini), y = average_Gini, fill = Label)) +
   geom_col() +
   labs(title = "Gini indices per sample",
@@ -97,7 +97,7 @@ ggsave(
   dpi = 300
 )
 
-# 3.0 Density plots of genes ----
+# 3.0 Density plots of genes ----------------------------------------------------
 head(counts_norm)
 # create a long df
 norm_long <- counts_norm |> 
