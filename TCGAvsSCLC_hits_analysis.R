@@ -60,7 +60,7 @@ TCGA_George = inner_join(TCGA_norm, George_tpm, by = "Gene")
 TCGA_George[1:5,1:5]
 
 # 4.0 Select out the genes of interests (hits undergoing validation): ----------
-candidate = c("NRK", "SLC6A11", "PECAM1", "DDX23", "TAF7")
+candidate = c("GENE1", "GENE2", "GENE3", "GENE4", "GENE5")
 cand_tpm = TCGA_George |> 
   filter(Gene %in% candidate)
 # 4.1 Plot out distribution plots ----------------------------------------------
@@ -127,7 +127,7 @@ ggsave("NormalvsSCLC_select_hits.png",
        width = 400/90)
 
 # 5.0 Select out the potential genes (hits from screen <0.2): ------------------
-candidate = c("JAK1", "SETD1B", "PEO1", "IRF1", "RAF1", "PEO1")
+candidate = c("GENE1", "GENE2", "GENE3", "GENE4", "GENE5", "GENE6")
 cand_tpm = TCGA_George |> 
   filter(Gene %in% candidate)
 # 5.1 Plot out distribution plots ----------------------------------------------
@@ -193,7 +193,7 @@ ggsave("NormalvsSCLC_select_0.2_hits.png",
        width = 400/90)
 
 # 6.0 Select out genes from NE-low or NE-high ----------------------------------
-candidate = c("ITGA5", "EZH2", "MMP11", "MGMT", "HDAC4", "CENPK", "CENPU", "TXNL4A", "FSTL4", "KDM1A")
+candidate = c("GENE1", "GENE2", "GENE3", "GENE4", "GENE5", "GENE6", "GENE7", "GENE8", "GENE9", "GENE10")
 cand_tpm = TCGA_George |> 
   filter(Gene %in% candidate)
 # 6.1 Plot out distribution plots ----------------------------------------------
